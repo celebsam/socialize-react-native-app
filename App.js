@@ -1,12 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import { Avatar } from "react-native-elements";
-import { auth } from "./utils/firebase";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -24,17 +22,7 @@ export default function App() {
         }}
         initialRouteName="Login"
       >
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            headerRight: () => (
-              <TouchableOpacity>
-                <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
-              </TouchableOpacity>
-            ),
-          }}
-        />
+        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
       </Stack.Navigator>

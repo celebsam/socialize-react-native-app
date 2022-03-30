@@ -26,7 +26,7 @@ const RegisterScreen = ({ navigation }) => {
       .then((userCredential) => {
         updateProfile(auth.currentUser, {
           displayName: firstName + " " + lastName,
-          photoURL: picture || "http://picsum.photos/340",
+          photoURL: picture || "https://picsum.photos/340",
         })
           .then(() => {
             console.log("profile Updated");

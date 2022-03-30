@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import { Button, Image, Input } from "react-native-elements";
 import { auth } from "../utils/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,16 @@ const LoginScreen = ({ navigation }) => {
 
   const loginHandler = () => {
     console.log("You logged in");
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // const user = userCredential.user;
+        navigation.replace("Home");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorMessage);
+      });
   };
 
   const registerHandler = () => {
