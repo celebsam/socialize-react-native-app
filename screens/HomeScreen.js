@@ -7,15 +7,36 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import CustomListItem from "../components/CustomListItem";
 import { Avatar } from "react-native-elements";
-import { auth } from "../utils/firebase";
+import { auth, db } from "../utils/firebase";
 import { signOut } from "firebase/auth";
 import { Feather } from "@expo/vector-icons";
+import { collection, getDocs } from "firebase/firestore";
 
 const HomeScreen = ({ navigation }) => {
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    const colRef = collection(db, "chats");
+    getDocs(colRef)
+      .then((snapshot) => {
+        let chats = [];
+        snapshot.docs.forEach((doc) => {
+          chats.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        setChats(chats);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  }, []);
+
   const signOutHandler = () => {
     if (showConfirmDialog(navigation)) {
     }
@@ -54,7 +75,10 @@ const HomeScreen = ({ navigation }) => {
           <TouchableOpacity activeOpacity={0.5}>
             <Feather name="camera" size={24} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate("Add Chat")}
+          >
             <Feather name="edit" size={24} color="white" />
           </TouchableOpacity>
         </View>
@@ -67,7 +91,9 @@ const HomeScreen = ({ navigation }) => {
     <ScrollView>
       <SafeAreaView></SafeAreaView>
       <StatusBar style="auto" />
-      <CustomListItem />
+      {chats.map((chat) => (
+        <CustomListItem key={chat.id} id={chat.id} chatName={chat.chatName} />
+      ))}
     </ScrollView>
   );
 };
