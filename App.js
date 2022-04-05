@@ -7,7 +7,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import AddChatScreen from "./screens/AddChatScreen";
 import Toast from "react-native-toast-message";
-import ChatScreen from "./screens/chatScreen";
+import ChatScreen from "./screens/ChatScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
