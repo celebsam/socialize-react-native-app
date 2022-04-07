@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { auth, db } from "../utils/firebase";
 
 const CustomListItem = ({ id, chatName, enterChatHandler }) => {
+  const [chatMessages, setChatMessages] = useState([]);
+
+  useEffect(() => {
+    const colRef = collection(db, `/chats/${id}`, "messages");
+    const q = query(colRef, orderBy("timestamp", "desc"));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const messages = [];
+      querySnapshot?.forEach((doc) => {
+        messages?.push(doc?.data());
+      });
+      setChatMessages(messages);
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <ListItem
       key={id}
@@ -13,7 +38,7 @@ const CustomListItem = ({ id, chatName, enterChatHandler }) => {
       <ListItem.Content>
         <ListItem.Title>{chatName}</ListItem.Title>
         <ListItem.Subtitle numberOfLines={1} ellipsizeMode="tail">
-          This is the subtitle and just trying to make it long for nothing.
+          {chatMessages?.[0]?.message}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
